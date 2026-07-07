@@ -4,6 +4,7 @@ package com.trip10.Trip10.controller;
 import com.trip10.Trip10.dto.*;
 import com.trip10.Trip10.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,30 +22,30 @@ public class DocumentController {
     }
 
     @GetMapping
-    public ApiResponse<List<DocumentResponse>> getDocs() {
-        return ApiResponse.success("documents fetched successfully", documentService.findAll());
+    public ResponseEntity<ApiResponse<List<DocumentResponse>>> getDocs() {
+        return ApiResponse.success("documents fetched successfully", documentService.findAll()).toResponseEntity();
     }
 
 
     @GetMapping("/{id}")
-    public ApiResponse<DocumentResponse> getDoc(@PathVariable int id) {
-        return documentService.findById(id);
+    public ResponseEntity<ApiResponse<DocumentResponse>> getDoc(@PathVariable int id) {
+        return documentService.findById(id).toResponseEntity();
     }
 
 
     @PostMapping("/add")
-    public ApiResponse<DocumentResponse> addDoc(@RequestBody DocumentRequest request) {
-        return documentService.create(request);
+    public ResponseEntity<ApiResponse<DocumentResponse>> addDoc(@RequestBody DocumentRequest request) {
+        return documentService.create(request).toResponseEntity();
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<DocumentResponse> updateDoc(@PathVariable int id, @RequestBody DocumentRequest request) {
-        return documentService.update(id, request);
+    public ResponseEntity<ApiResponse<DocumentResponse>> updateDoc(@PathVariable int id, @RequestBody DocumentRequest request) {
+        return documentService.update(id, request).toResponseEntity();
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Void> deleteDoc(@PathVariable int id) {
-        return documentService.deleteById(id);
+    public ResponseEntity<ApiResponse<Void>> deleteDoc(@PathVariable int id) {
+        return documentService.deleteById(id).toResponseEntity();
     }
 
 //

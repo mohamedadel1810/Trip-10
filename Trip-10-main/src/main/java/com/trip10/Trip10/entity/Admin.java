@@ -28,10 +28,8 @@ public class Admin {
     @Column(name = "password")
     private String password;
 
-private int permissionId;
-    @OneToOne
-    @JoinColumn(name = "permission_id")
-    private AdminPermission permission;
+    @Column(name = "permission_id")
+    private int permissionId;
 
     @Column(name = "is_super_admin")
     private boolean isSuperAdmin;

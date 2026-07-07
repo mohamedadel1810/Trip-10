@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "cars")
+@Table(name = "car")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -41,6 +41,7 @@ public class Car {
     private LocalDateTime createdAt;
 
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "verification_status")
     private VerificationStatus verificationStatus;
 //

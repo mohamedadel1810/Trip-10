@@ -25,10 +25,8 @@ public class AccountConflictChecker {
     }
 
     public String phoneConflict(String phone) {
-        if (driversRepo.findDriverPhoneNumber(phone).isPresent())
+        if (driversRepo.findDriverByPhoneNumber(phone).isPresent())
             return "Phone number is already registered as a driver account";
-        if (customerRepo.findCustomerByPhoneNumber(phone).isPresent())
-            return "Phone number is already registered as a customer account";
         return null;
     }
 }

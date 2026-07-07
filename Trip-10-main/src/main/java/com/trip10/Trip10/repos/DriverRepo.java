@@ -9,5 +9,5 @@ public interface DriverRepo extends CrudRepository<Driver, Integer> {
 
     Optional<Driver> findDriverByEmail(String email);
 
-    Optional<Driver> findDriverPhoneNumber(String phoneNumber);
+    Optional<Driver> findDriverByPhoneNumber(String phoneNumber);
 }

@@ -37,6 +37,7 @@ public class CarDoc {
     private LocalDateTime uploadedAt;
 
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "auth_status")
     private VerificationStatus verificationStatus = VerificationStatus.PENDING;
 

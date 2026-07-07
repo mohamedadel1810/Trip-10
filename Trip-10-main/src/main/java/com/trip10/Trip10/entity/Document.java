@@ -30,12 +30,15 @@ public class Document {
     private LocalDateTime uploadedAt;
 
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "auth_status")
     private VerificationStatus verificationStatus = VerificationStatus.PENDING;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "document_type")
     private DocumentType documentType;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "owner_type")
     private OwnerType ownerType;
 

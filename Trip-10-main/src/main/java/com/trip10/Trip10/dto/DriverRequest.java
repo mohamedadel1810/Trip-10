@@ -18,7 +18,6 @@ import java.util.List;
 @Setter
 public class DriverRequest {
 
-    private int docId;
 
     @NotBlank(message = "driver name required")
     private String driverName;

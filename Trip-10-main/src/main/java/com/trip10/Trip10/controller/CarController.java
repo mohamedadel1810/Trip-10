@@ -4,6 +4,7 @@ import com.trip10.Trip10.dto.ApiResponse;
 import com.trip10.Trip10.dto.CarRequest;
 import com.trip10.Trip10.dto.CarResponse;
 import com.trip10.Trip10.service.CarService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,36 +19,36 @@ public class CarController {
         this.carService = carService;
     }
     @GetMapping
-    public ApiResponse<List<CarResponse>> getAllCars(){
-        return ApiResponse.success("cars fetched ",carService.findAll());
+    public ResponseEntity<ApiResponse<List<CarResponse>>> getAllCars(){
+        return ApiResponse.success("cars fetched ",carService.findAll()).toResponseEntity();
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<CarResponse> getCarById(@PathVariable int id){
+    public ResponseEntity<ApiResponse<CarResponse>> getCarById(@PathVariable int id){
 
-        return carService.findById(id);
+        return carService.findById(id).toResponseEntity();
     }
 
 
     @PostMapping("/add")
-    public ApiResponse<CarResponse> addCar(@RequestBody CarRequest request){
+    public ResponseEntity<ApiResponse<CarResponse>> addCar(@RequestBody CarRequest request){
 
-        return carService.create(request);
+        return carService.create(request).toResponseEntity();
     }
 
     @PostMapping("/verify/{id}")
-    public ApiResponse<CarResponse> verifyCar(@PathVariable int id,@RequestBody CarRequest request){
+    public ResponseEntity<ApiResponse<CarResponse>> verifyCar(@PathVariable int id,@RequestBody CarRequest request){
 
-        return carService.verifyCar(id,request);
+        return carService.verifyCar(id,request).toResponseEntity();
 
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<CarResponse> updateCar (@RequestBody CarRequest request,int id){
-        return carService.update(id,request);
+    public ResponseEntity<ApiResponse<CarResponse>> updateCar (@RequestBody CarRequest request,int id){
+        return carService.update(id,request).toResponseEntity();
     }
     @DeleteMapping("/{id}")
-    public ApiResponse<Void> deleteCar(@PathVariable int id){
-        return carService.deleteById(id);
+    public ResponseEntity<ApiResponse<Void>> deleteCar(@PathVariable int id){
+        return carService.deleteById(id).toResponseEntity();
     }
 }

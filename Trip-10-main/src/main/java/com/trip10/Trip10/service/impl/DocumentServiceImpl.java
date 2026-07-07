@@ -6,6 +6,7 @@ import com.trip10.Trip10.entity.Document;
 import com.trip10.Trip10.repos.DocumentRepo;
 import com.trip10.Trip10.service.DocumentService;
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 
+@Service
 public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentRepo documentRepo;

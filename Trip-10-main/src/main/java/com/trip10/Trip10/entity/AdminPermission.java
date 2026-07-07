@@ -1,7 +1,6 @@
 package com.trip10.Trip10.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,10 @@ import lombok.Setter;
 public class AdminPermission {
 
 
-    private int permission_id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "permission_id")
+    private int permissionId;
 
     private boolean canVerifyDocuments;
 

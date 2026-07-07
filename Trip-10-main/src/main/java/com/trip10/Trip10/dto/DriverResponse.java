@@ -20,7 +20,6 @@ public class DriverResponse {
 
 
     private int id;
-    private int docId;
     private String driverName;
     private String driverEmail;
     private String driverPhone;
@@ -30,6 +29,8 @@ public class DriverResponse {
     private LocalDateTime createdOn;
 
     private DriverType driverType;
+
+    private String token;
 
 
 

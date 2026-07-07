@@ -5,6 +5,7 @@ import com.trip10.Trip10.dto.ApiResponse;
 import com.trip10.Trip10.dto.CustomerRequest;
 import com.trip10.Trip10.dto.CustomerResponse;
 import com.trip10.Trip10.dto.UpdateUserRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,25 +19,25 @@ public class CustomerController {
         this.customerService = customerService;
     }
     @GetMapping
-    public ApiResponse<List<CustomerResponse>> getAllCustomers() {
+    public ResponseEntity<ApiResponse<List<CustomerResponse>>> getAllCustomers() {
 
-        return ApiResponse.success("customers fetched successfully",customerService.findAll());
+        return ApiResponse.success("customers fetched successfully",customerService.findAll()).toResponseEntity();
 
     }
     @GetMapping("/{id}")
-    public ApiResponse<CustomerResponse> getCustomerById(@PathVariable int id) {
-        return customerService.findById(id);
+    public ResponseEntity<ApiResponse<CustomerResponse>> getCustomerById(@PathVariable int id) {
+        return customerService.findById(id).toResponseEntity();
     }
     @PostMapping("/add")
-    public ApiResponse<CustomerResponse> addCustomer(@RequestBody CustomerRequest customerRequest) {
-        return customerService.create(customerRequest);
+    public ResponseEntity<ApiResponse<CustomerResponse>> addCustomer(@RequestBody CustomerRequest customerRequest) {
+        return customerService.create(customerRequest).toResponseEntity();
     }
     @PutMapping("/{id}")
-    public ApiResponse<CustomerResponse> updateCustomer(@RequestBody UpdateUserRequest customerRequest, @PathVariable int id) {
-        return customerService.update(id,customerRequest);
+    public ResponseEntity<ApiResponse<CustomerResponse>> updateCustomer(@RequestBody UpdateUserRequest customerRequest, @PathVariable int id) {
+        return customerService.update(id,customerRequest).toResponseEntity();
     }
     @DeleteMapping("/{id}")
-    public ApiResponse<Void> deleteCustomer(@PathVariable int id) {
-        return customerService.deleteById(id);
+    public ResponseEntity<ApiResponse<Void>> deleteCustomer(@PathVariable int id) {
+        return customerService.deleteById(id).toResponseEntity();
     }
 }

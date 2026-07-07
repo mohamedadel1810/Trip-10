@@ -12,6 +12,7 @@ import com.trip10.Trip10.entity.Driver;
 import com.trip10.Trip10.repos.DriverRepo;
 import com.trip10.Trip10.repos.Otprepo;
 import com.trip10.Trip10.service.PermissionCheckService;
+import com.trip10.Trip10.service.JwtService;
 import com.trip10.Trip10.service.adminservice.AdminSecurityService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,26 +31,27 @@ public class DriverServiceImpl implements DriverService {
     private final PasswordEncoder passwordEncoder;
     private final AdminSecurityService adminSecurityService;
     private final PermissionCheckService permissionCheckService;
+    private final JwtService jwtService;
 
     @Autowired
-    public DriverServiceImpl(DriverRepo driverRepo, Otprepo otprepo, AccountConflictChecker accountConflictChecker, PasswordEncoder passwordEncoder, AdminSecurityService adminSecurityService, PermissionCheckService permissionCheckService) {
+    public DriverServiceImpl(DriverRepo driverRepo, Otprepo otprepo, AccountConflictChecker accountConflictChecker, PasswordEncoder passwordEncoder, AdminSecurityService adminSecurityService, PermissionCheckService permissionCheckService, JwtService jwtService) {
         this.driverRepo = driverRepo;
         this.otprepo = otprepo;
         this.accountConflictChecker = accountConflictChecker;
         this.passwordEncoder = passwordEncoder;
         this.adminSecurityService = adminSecurityService;
         this.permissionCheckService = permissionCheckService;
+        this.jwtService = jwtService;
     }
 
     private DriverResponse toResponse(Driver driver) {
         DriverResponse d = new DriverResponse();
         d.setId(driver.getId());
-        d.getDocId();
         d.setDriverName(driver.getName());
         d.setDriverEmail(driver.getEmail());
-        d.setDriverPhone(driver.getPhone_number());
-        d.setVerificationStatus(driver.getAuth_status());
-        d.setOtpVerified(driver.isOtp_verification());
+        d.setDriverPhone(driver.getPhoneNumber());
+        d.setVerificationStatus(driver.getAuthStatus());
+        d.setOtpVerified(driver.isOtpVerification());
         d.setCreatedOn(driver.getCreatedAt());
         d.setDriverType(driver.getDriverType());
         return d;
@@ -79,25 +81,25 @@ public class DriverServiceImpl implements DriverService {
     @Override
     @Transactional
     public ApiResponse<DriverResponse> create(DriverRequest request) {
-        String emailConflict = accountConflictChecker.emailConflict(request.getEmail());
-        if (emailConflict != null) return ApiResponse.conflict(emailConflict);
-
         String phoneConflict = accountConflictChecker.phoneConflict(normalizePhone(request.getPhoneNumber()));
         if (phoneConflict != null) return ApiResponse.conflict(phoneConflict);
+
+        String emailConflict = accountConflictChecker.emailConflict(request.getEmail());
+        if (emailConflict != null) return ApiResponse.conflict(emailConflict);
 
         Driver driver = new Driver();
         driver.setName(request.getDriverName());
         driver.setEmail(request.getEmail());
         driver.setPassword(passwordEncoder.encode(request.getPassword()));
-        driver.setPhone_number(normalizePhone(request.getPhoneNumber()));
-        driver.setAuth_status(VerificationStatus.PENDING);
-        driver.setOtp_verification(false);
+        driver.setPhoneNumber(normalizePhone(request.getPhoneNumber()));
+        driver.setAuthStatus(VerificationStatus.PENDING);
+        driver.setOtpVerification(false);
         driver.setDriverType(request.getDriverType());
-        driver.setDocId(request.getDocId());
 
         Driver saved = driverRepo.save(driver);
         DriverResponse response = toResponse(saved);
         response.setMessage("Registered, not verified yet");
+        response.setToken(jwtService.generateToken(saved.getEmail()));
         return ApiResponse.created("Driver registered successfully", response);
     }
 
@@ -113,10 +115,10 @@ public class DriverServiceImpl implements DriverService {
 
         return driverRepo.findById(driverID)
                 .map(driver -> {
-                    if (driver.getAuth_status() == VerificationStatus.VERIFIED)
+                    if (driver.getAuthStatus() == VerificationStatus.VERIFIED)
                         return ApiResponse.<DriverResponse>badRequest("Driver is already verified");
 
-                    driver.setAuth_status(VerificationStatus.VERIFIED);
+                    driver.setAuthStatus(VerificationStatus.VERIFIED);
                     driverRepo.save(driver);
 
                     DriverResponse response = toResponse(driver);
@@ -129,10 +131,10 @@ public class DriverServiceImpl implements DriverService {
     @Transactional
     public ApiResponse<String> sendOtp(String phoneNumber) {
         String normalizePhone = normalizePhone(phoneNumber);
-        return driverRepo.findDriverPhoneNumber(normalizePhone)
+        return driverRepo.findDriverByPhoneNumber(normalizePhone)
                 .map(driver -> {
                     String otp = String.valueOf((int) (Math.random() * 900000) + 100000);
-                    driver.setOtp_code(otp);
+                    driver.setOtpCode(otp);
                     driver.setOtpExpiresAt(LocalDateTime.now().plusMinutes(5));
                     driverRepo.save(driver);
                     return ApiResponse.<String>success("OTP generated successfully", null);
@@ -145,17 +147,17 @@ public class DriverServiceImpl implements DriverService {
     public ApiResponse<DriverResponse> verifyOtp(String phoneNumber, String otp) {
         phoneNumber=normalizePhone(phoneNumber);
 
-        return driverRepo.findDriverPhoneNumber(phoneNumber)
+        return driverRepo.findDriverByPhoneNumber(phoneNumber)
                 .map(driver -> {
-                    if (driver.getOtp_code()==null)
+                    if (driver.getOtpCode()==null)
                         return ApiResponse.<DriverResponse>badRequest("no otp sent to this phone number");
                     if (driver.getOtpExpiresAt().isBefore(LocalDateTime.now()))
                         return ApiResponse.<DriverResponse>badRequest("otp code sent was expired");
-                    if (!driver.getOtp_code().equals(otp))
+                    if (!driver.getOtpCode().equals(otp))
                         return ApiResponse.<DriverResponse>badRequest("invalid otp code");
 
-                    driver.setOtp_verification(true);
-                    driver.setOtp_code(null);
+                    driver.setOtpVerification(true);
+                    driver.setOtpCode(null);
                     driver.setOtpExpiresAt(null);
                     driverRepo.save(driver);
 
@@ -169,7 +171,7 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public ApiResponse<DriverResponse> login(DriverRequest request) {
-      return driverRepo.findDriverPhoneNumber(normalizePhone(request.getPhoneNumber()))
+      return driverRepo.findDriverByPhoneNumber(normalizePhone(request.getPhoneNumber()))
                 .map(driver -> {
                     if (!passwordEncoder.matches(request.getPassword(), driver.getPassword()))
                         return ApiResponse.<DriverResponse>badRequest("Invalid phone number or password");
@@ -178,6 +180,7 @@ public class DriverServiceImpl implements DriverService {
 
                     DriverResponse response = toResponse(driver);
                     response.setMessage(message);
+                    response.setToken(jwtService.generateToken(driver.getEmail()));
                     return ApiResponse.success(message, response);
                 })
                 .orElse(ApiResponse.notFound("there is no account found with this phone number"));
@@ -199,7 +202,7 @@ public class DriverServiceImpl implements DriverService {
             driver.setEmail(request.getEmail());
         }
         if (request.getPhoneNumber() != null && !request.getPhoneNumber().isBlank()) {
-            driver.setPhone_number(request.getPhoneNumber());
+            driver.setPhoneNumber(request.getPhoneNumber());
         }
         if (request.getPassword() != null && !request.getPassword().isBlank()) {
             driver.setPassword(passwordEncoder.encode(request.getPassword()));

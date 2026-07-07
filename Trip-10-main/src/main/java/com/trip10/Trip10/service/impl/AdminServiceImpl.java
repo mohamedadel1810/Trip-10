@@ -9,10 +9,12 @@ import com.trip10.Trip10.service.AdminService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class AdminServiceImpl implements AdminService {
 
     private final AdminRepo adminRepo;

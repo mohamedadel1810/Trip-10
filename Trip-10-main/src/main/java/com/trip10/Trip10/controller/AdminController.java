@@ -8,6 +8,7 @@ import com.trip10.Trip10.service.AdminService;
 import com.trip10.Trip10.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -29,32 +30,32 @@ public class AdminController {
         this.authenticationManager = authenticationManager;
     }
     @GetMapping
-    public ApiResponse<List<AdminResponse>>getAll(){
-        return ApiResponse.success("admin fetched ",adminService.findAll());
+    public ResponseEntity<ApiResponse<List<AdminResponse>>>getAll(){
+        return ApiResponse.success("admin fetched ",adminService.findAll()).toResponseEntity();
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<AdminResponse> getAdmin(@PathVariable int id){
-        return adminService.findById(id);
+    public ResponseEntity<ApiResponse<AdminResponse>> getAdmin(@PathVariable int id){
+        return adminService.findById(id).toResponseEntity();
     }
     @PostMapping("/add")
-    public ApiResponse<AdminResponse> addAdmin(@RequestBody AdminRequest request){
-        return adminService.create(request);
+    public ResponseEntity<ApiResponse<AdminResponse>> addAdmin(@RequestBody AdminRequest request){
+        return adminService.create(request).toResponseEntity();
     }
     @PutMapping("/{id}")
-    public ApiResponse<AdminResponse> update(@PathVariable int id,@RequestBody AdminRequest request){
+    public ResponseEntity<ApiResponse<AdminResponse>> update(@PathVariable int id,@RequestBody AdminRequest request){
 
-        return adminService.update(id,request);
+        return adminService.update(id,request).toResponseEntity();
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Void> delete (@PathVariable int id){
+    public ResponseEntity<ApiResponse<Void>> delete (@PathVariable int id){
 
-        return adminService.deleteById(id);
+        return adminService.deleteById(id).toResponseEntity();
     }
 
     @PostMapping("/login")
-    public ApiResponse<String> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<ApiResponse<String>> login(@RequestBody LoginRequest request) {
 
 
         authenticationManager.authenticate(
@@ -69,7 +70,7 @@ public class AdminController {
         return ApiResponse.success(
                 "Login successful",
                 token
-        );
+        ).toResponseEntity();
     }
 
 }

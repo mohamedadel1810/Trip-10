@@ -37,6 +37,7 @@ public class DriverDoc {
     @Column(name = "path")
     private String path;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "auth_status")
     private VerificationStatus verificationStatus = VerificationStatus.PENDING;
 

@@ -20,8 +20,6 @@ public class User {
 
     private String username;
 
-//    @OneToOne
-//    @JoinColumn(name = "permission_id")
-//    private AdminPermission permission;
+    private int permissionId;
 
 }

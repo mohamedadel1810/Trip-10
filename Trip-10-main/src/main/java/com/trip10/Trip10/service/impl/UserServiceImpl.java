@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public ApiResponse<User> create(User user) {
 
-        User saved =userRepo.save(new User(user.getId(), user.getUsername(),user.getPermission()));
+        User saved =userRepo.save(new User(user.getId(), user.getUsername(),user.getPermissionId()));
         return ApiResponse.success("user created successfully",saved);
 
     }
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
                 .map(user1 -> {
 
                     user1.setUsername(user.getUsername());
-                    user1.setPermission(user.getPermission());
+                    user1.setPermissionId(user.getPermissionId());
 
                     User savedUser = userRepo.save(user1);
 

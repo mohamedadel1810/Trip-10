@@ -23,9 +23,6 @@ public class Driver {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "doc_id")
-    private int docId;
-
     @Column(name = "driverName", nullable = false)
     private String name;
     @Column(name = "email",nullable = false,unique = true)
@@ -33,17 +30,17 @@ public class Driver {
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "phone_number", nullable = false,unique = true)
-    private String phone_number;
+    private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "auth_status")
-    private VerificationStatus auth_status= VerificationStatus.PENDING;
+    private VerificationStatus authStatus = VerificationStatus.PENDING;
 
     @Column(name = "otp_verification")
-    private boolean otp_verification;
+    private boolean otpVerification;
 
     @Column(name = "otp_code")
-    private String otp_code;
+    private String otpCode;
 
     @Column(name = "otp_expires_at")
     private LocalDateTime otpExpiresAt;
@@ -55,6 +52,7 @@ public class Driver {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "driver_type")
     private DriverType driverType;
 
