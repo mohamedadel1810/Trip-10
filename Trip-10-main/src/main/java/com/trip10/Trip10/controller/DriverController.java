@@ -30,6 +30,11 @@ public class DriverController {
     public ResponseEntity<ApiResponse<DriverResponse>> addDriver(@RequestBody DriverRequest request){
         return driverService.create(request).toResponseEntity();
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<DriverResponse>> login(@RequestBody DriverRequest request){
+        return driverService.login(request).toResponseEntity();
+    }
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<DriverResponse>> updateDriver(@PathVariable int id, @RequestBody UpdateUserRequest request){
         return driverService.update(id,request).toResponseEntity();

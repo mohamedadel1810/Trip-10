@@ -126,3 +126,16 @@ CREATE TABLE IF NOT EXISTS otp_verification (
     is_verified BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS api_log (
+    id INT NOT NULL AUTO_INCREMENT,
+    http_method VARCHAR(10),
+    endpoint VARCHAR(255),
+    request_body TEXT,
+    response_body TEXT,
+    status_code INT,
+    performed_by VARCHAR(255),
+    ip_address VARCHAR(45),
+    created_at DATETIME,
+    PRIMARY KEY (id)
+);
