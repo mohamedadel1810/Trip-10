@@ -1,6 +1,7 @@
 package com.trip10.Trip10.config;
 
 import com.trip10.Trip10.jwt.JwtAuthenticationFilter;
+import com.trip10.Trip10.logging.ApiLoggingFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final ApiLoggingFilter apiLoggingFilter;
     private final AdminDetailsService adminDetailsService;
 
 
@@ -60,11 +62,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/driver").permitAll()
-                        .requestMatchers("/api/driver/otp/send", "/api/driver/phone/verify").permitAll()
+                        .requestMatchers("/api/driver/login", "/api/driver/otp/send", "/api/driver/phone/verify").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class);
+                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(apiLoggingFilter,
+                        JwtAuthenticationFilter.class);
 
         return http.build();
     }
