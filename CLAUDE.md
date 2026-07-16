@@ -4,6 +4,7 @@
 - **No Plurals:** **Never** append an "s" or "es" to the end of any table name.
 - **Execution Scripts:** Whenever providing any DB additions (INSERT/CREATE), updates (UPDATE/ALTER), or deletions (DELETE/DROP), **always provide the raw SQL script** ready to copy-paste and run directly in MySQL Workbench.
 - **Database Selection:** Always begin every SQL script with `USE trip10;` before any other statement including `SET FOREIGN_KEY_CHECKS`.
+- **Primary Key Naming:** A table's own primary key column must always be named just `id` — never prefix it with the table name (e.g. `trip` table → `id`, not `trip_id`). This applies to the Java entity's `@Id` field too (e.g. `private int id;`, not `private int tripId;`). Foreign key columns on *other* tables that reference this key still use the descriptive `<referenced_table>_id` form (e.g. `trip.driver_id` referencing `driver.id`) — this rule is only about a table's own primary key.
 - **Ignore Foreign Keys:** In the generated SQL scripts, wrap the modifications to safely ignore foreign key constraints if they exist by using:
 
 ```sql
