@@ -127,6 +127,23 @@ CREATE TABLE IF NOT EXISTS otp_verification (
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS trip (
+    trip_id INT NOT NULL AUTO_INCREMENT,
+    driver_id INT,
+    customer_id INT,
+    start_location VARCHAR(255),
+    end_location VARCHAR(255),
+    distance DOUBLE,
+    price DOUBLE,
+    start_time DATETIME,
+    end_time DATETIME,
+    updated_at DATETIME,
+    deleted_at DATETIME,
+    trip_status VARCHAR(30),
+    trip_type VARCHAR(30),
+    PRIMARY KEY (trip_id)
+);
+
 CREATE TABLE IF NOT EXISTS api_log (
     id INT NOT NULL AUTO_INCREMENT,
     http_method VARCHAR(10),

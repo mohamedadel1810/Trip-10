@@ -39,7 +39,7 @@ public class TripController {
 
         return tripService.customerUpdate(id, request).toResponseEntity();
     }
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/price")
     public ResponseEntity<ApiResponse<TripResponse>> adminUpdate(@PathVariable int id, @RequestBody TripRequest request){
         return tripService.adminUpdate(id,request).toResponseEntity();
     }

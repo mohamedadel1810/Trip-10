@@ -51,9 +51,11 @@ public class Trip {
     @Column(name = "deleted_at")
     LocalDateTime deletedAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "trip_status")
     TripStatus tripStatus;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "trip_type")
     TripType tripType;
 
