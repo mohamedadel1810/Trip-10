@@ -17,8 +17,8 @@ public class AdminPermission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "permission_id")
-    private int permissionId;
+    @Column(name = "id")
+    private int id;
 
     private boolean canVerifyDocuments;
 

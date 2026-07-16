@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS admin_permission (
-    permission_id INT NOT NULL AUTO_INCREMENT,
+    id INT NOT NULL AUTO_INCREMENT,
     can_verify_documents BOOLEAN,
     can_reject_documents BOOLEAN,
     can_approve_drivers BOOLEAN,
     can_manage_admins BOOLEAN,
-    PRIMARY KEY (permission_id)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS permission (
@@ -15,15 +15,15 @@ CREATE TABLE IF NOT EXISTS permission (
 );
 
 CREATE TABLE IF NOT EXISTS admin (
-    admin_id INT NOT NULL AUTO_INCREMENT,
+    id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(255),
     email VARCHAR(255),
     password VARCHAR(255),
     permission_id INT,
     is_super_admin BOOLEAN,
-    PRIMARY KEY (admin_id),
+    PRIMARY KEY (id),
     CONSTRAINT fk_admin_permission_id
-        FOREIGN KEY (permission_id) REFERENCES admin_permission (permission_id)
+        FOREIGN KEY (permission_id) REFERENCES admin_permission (id)
 );
 
 CREATE TABLE IF NOT EXISTS user (
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS user (
     permission_id INT,
     PRIMARY KEY (id),
     CONSTRAINT fk_user_permission_id
-        FOREIGN KEY (permission_id) REFERENCES admin_permission (permission_id)
+        FOREIGN KEY (permission_id) REFERENCES admin_permission (id)
 );
 
 CREATE TABLE IF NOT EXISTS customer (
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS car (
 );
 
 CREATE TABLE IF NOT EXISTS car_doc (
-    car_doc_id INT NOT NULL AUTO_INCREMENT,
+    id INT NOT NULL AUTO_INCREMENT,
     document_id INT,
     car_id INT NOT NULL,
     file_name VARCHAR(255) NOT NULL,
@@ -103,11 +103,11 @@ CREATE TABLE IF NOT EXISTS car_doc (
     uploaded_at DATETIME,
     auth_status VARCHAR(30) DEFAULT 'PENDING',
     rejection_reason VARCHAR(255),
-    PRIMARY KEY (car_doc_id)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS driver_doc (
-    doc_id INT NOT NULL AUTO_INCREMENT,
+    id INT NOT NULL AUTO_INCREMENT,
     driver_id INT NOT NULL,
     document_id INT,
     file_name VARCHAR(255) NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS driver_doc (
     path VARCHAR(255),
     auth_status VARCHAR(30) DEFAULT 'PENDING',
     rejection_reason VARCHAR(255),
-    PRIMARY KEY (doc_id)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS otp_verification (

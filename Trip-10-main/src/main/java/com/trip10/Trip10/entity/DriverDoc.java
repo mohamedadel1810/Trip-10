@@ -19,8 +19,8 @@ public class DriverDoc {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "doc_id")
-    private int docId;
+    @Column(name = "id")
+    private int id;
 
     @Column(name = "driver_id",nullable = false)
     private int driverId;

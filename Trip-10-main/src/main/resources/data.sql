@@ -1,4 +1,4 @@
-INSERT IGNORE INTO admin_permission (permission_id, can_verify_documents, can_reject_documents, can_approve_drivers, can_manage_admins)
+INSERT IGNORE INTO admin_permission (id, can_verify_documents, can_reject_documents, can_approve_drivers, can_manage_admins)
 VALUES
     (1, TRUE, TRUE, TRUE, TRUE),
     (2, FALSE, FALSE, FALSE, FALSE);
@@ -10,7 +10,7 @@ VALUES
     (3, 'CUSTOMER');
 
 -- password for every seeded account below is: Password123!
-INSERT IGNORE INTO admin (admin_id, name, email, password, permission_id, is_super_admin)
+INSERT IGNORE INTO admin (id, name, email, password, permission_id, is_super_admin)
 VALUES
     (1, 'Super Admin', 'admin@trip10.com', '$2b$10$qu6lK5l3ALED9vUOqHW0UubEWUUT9uVlz.RfDEiHhG7OPALxxaZIm', 1, TRUE),
     (2, 'Support Admin', 'support@trip10.com', '$2b$10$qu6lK5l3ALED9vUOqHW0UubEWUUT9uVlz.RfDEiHhG7OPALxxaZIm', 2, FALSE);
@@ -38,11 +38,11 @@ INSERT IGNORE INTO car (id, doc_id, brand, model, color, plate_number, created_a
 VALUES
     (1, 0, 'Toyota', 'Corolla', 'White', 'ABC1234', NOW(), 'PENDING');
 
-INSERT IGNORE INTO car_doc (car_doc_id, document_id, car_id, file_name, path, uploaded_at, auth_status)
+INSERT IGNORE INTO car_doc (id, document_id, car_id, file_name, path, uploaded_at, auth_status)
 VALUES
     (1, 2, 1, 'car_license.jpg', '/uploads/docs/car_license.jpg', NOW(), 'PENDING');
 
-INSERT IGNORE INTO driver_doc (doc_id, driver_id, document_id, file_name, uploaded_at, path, auth_status)
+INSERT IGNORE INTO driver_doc (id, driver_id, document_id, file_name, uploaded_at, path, auth_status)
 VALUES
     (1, 1, 1, 'national_id_front.jpg', NOW(), '/uploads/docs/national_id_front.jpg', 'PENDING');
 

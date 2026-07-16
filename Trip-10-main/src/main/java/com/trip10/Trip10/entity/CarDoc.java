@@ -18,8 +18,8 @@ public class CarDoc {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "car_doc_id")
-    private int carDocId;
+    @Column(name = "id")
+    private int id;
 
     @Column(name = "document_id")
     private int documentId;
