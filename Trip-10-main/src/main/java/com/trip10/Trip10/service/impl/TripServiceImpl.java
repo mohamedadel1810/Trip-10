@@ -26,7 +26,7 @@ public class TripServiceImpl implements TripService {
 
     private TripResponse toResponse(Trip trip){
         TripResponse t=new TripResponse();
-        t.setTripId(trip.getTripId());
+        t.setId(trip.getId());
         t.setCustomerId(trip.getCustomerId());
         t.setDriverId(trip.getDriverId());
         t.setDistance(trip.getDistance());

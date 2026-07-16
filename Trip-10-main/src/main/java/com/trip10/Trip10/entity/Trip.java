@@ -18,9 +18,9 @@ import java.time.LocalDateTime;
 public class Trip {
 
     @Id
-    @Column(name = "trip_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int tripId;
+    int id;
 
     @Column(name = "driver_id")
     int driverId;

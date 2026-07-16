@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 public class TripResponse {
 
-    int tripId;
+    int id;
 
     int driverId;
 
