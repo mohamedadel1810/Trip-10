@@ -29,6 +29,7 @@ public class AdminServiceImpl implements AdminService {
     private AdminResponse toResponse(Admin admin){
 
         AdminResponse r =new AdminResponse();
+        r.setId(admin.getId());
         r.setName(admin.getName());
         r.setEmail(admin.getEmail());
         r.setPermissionId(admin.getPermissionId());
