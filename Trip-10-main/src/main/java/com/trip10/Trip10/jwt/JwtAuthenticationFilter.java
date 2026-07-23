@@ -8,6 +8,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -50,9 +51,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
 
-
-        String subject = jwtService.extractUsername(token);
-        String role = jwtService.extractRole(token);
+        String subject;
+        String role;
+        try {
+            subject = jwtService.extractUsername(token);
+            role = jwtService.extractRole(token);
+        } catch (JwtException | IllegalArgumentException e) {
+            // Expired, malformed, or otherwise unparseable token — treat this
+            // request as unauthenticated rather than crashing. Whether that's
+            // acceptable is then decided normally by the security rules for
+            // the target endpoint (permitAll vs authenticated).
+            filterChain.doFilter(request, response);
+            return;
+        }
 
 
         if (subject != null && role != null &&
