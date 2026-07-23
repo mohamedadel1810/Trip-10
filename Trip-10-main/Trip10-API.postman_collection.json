@@ -1,0 +1,434 @@
+{
+  "info": {
+    "name": "Trip10 API",
+    "description": "Admin, Driver, and Customer flows for the Trip10 backend — auth, OTP verification, self-service, and admin management.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "adminToken", "value": "" },
+    { "key": "driverToken", "value": "" },
+    { "key": "driverId", "value": "" },
+    { "key": "driverPhone", "value": "01099998888" },
+    { "key": "driverOtpCode", "value": "" },
+    { "key": "customerToken", "value": "" },
+    { "key": "customerId", "value": "" },
+    { "key": "customerPhone", "value": "01077778888" },
+    { "key": "customerOtpCode", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Login",
+          "event": [{
+            "listen": "test",
+            "script": { "type": "text/javascript", "exec": [
+              "const json = pm.response.json();",
+              "if (json.data) pm.collectionVariables.set('adminToken', json.data);"
+            ]}
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/admin/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@trip10.com\",\n  \"password\": \"test123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "List Admins",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin"
+          }
+        },
+        {
+          "name": "Get Admin By Id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin/1"
+          }
+        },
+        {
+          "name": "Create Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/api/admin/add",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Admin\",\n  \"email\": \"newadmin@trip10.com\",\n  \"password\": \"test123\",\n  \"permissionId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Admin",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/api/admin/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Admin Name\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Admin",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin/1"
+          }
+        },
+        {
+          "name": "List Admin Permissions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin_permission"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Driver",
+      "item": [
+        {
+          "name": "Register",
+          "event": [{
+            "listen": "test",
+            "script": { "type": "text/javascript", "exec": [
+              "const json = pm.response.json();",
+              "if (json.data && json.data.token) pm.collectionVariables.set('driverToken', json.data.token);",
+              "if (json.data && json.data.id) pm.collectionVariables.set('driverId', json.data.id);"
+            ]}
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/driver",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"driverName\": \"Test Driver\",\n  \"email\": \"testdriver@example.com\",\n  \"password\": \"test123\",\n  \"phoneNumber\": \"{{driverPhone}}\",\n  \"driverType\": \"INDIVIDUAL_DRIVER\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [{
+            "listen": "test",
+            "script": { "type": "text/javascript", "exec": [
+              "const json = pm.response.json();",
+              "if (json.data && json.data.token) pm.collectionVariables.set('driverToken', json.data.token);",
+              "if (json.data && json.data.id) pm.collectionVariables.set('driverId', json.data.id);"
+            ]}
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/driver/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phoneNumber\": \"{{driverPhone}}\",\n  \"password\": \"test123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Send OTP",
+          "event": [{
+            "listen": "test",
+            "script": { "type": "text/javascript", "exec": [
+              "const json = pm.response.json();",
+              "if (json.data) pm.collectionVariables.set('driverOtpCode', json.data);"
+            ]}
+          }],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/driver/otp/send?phoneNumber={{driverPhone}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "driver", "otp", "send"],
+              "query": [{ "key": "phoneNumber", "value": "{{driverPhone}}" }]
+            }
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/driver/phone/verify?phoneNumber={{driverPhone}}&otpCode={{driverOtpCode}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "driver", "phone", "verify"],
+              "query": [
+                { "key": "phoneNumber", "value": "{{driverPhone}}" },
+                { "key": "otpCode", "value": "{{driverOtpCode}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Self (Me)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{driverToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/api/driver/me",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Updated Driver Name\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Self (Me)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }],
+            "url": "{{baseUrl}}/api/driver/me"
+          }
+        },
+        {
+          "name": "Admin Verify Driver Documents",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/driver/verify/{{driverId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - Driver Management",
+      "item": [
+        {
+          "name": "List All Drivers",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin/driver"
+          }
+        },
+        {
+          "name": "Get Driver By Id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin/driver/{{driverId}}"
+          }
+        },
+        {
+          "name": "Update Driver By Id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/api/admin/driver/{{driverId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Admin Updated This Driver\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Driver By Id",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin/driver/{{driverId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customer",
+      "item": [
+        {
+          "name": "Register",
+          "event": [{
+            "listen": "test",
+            "script": { "type": "text/javascript", "exec": [
+              "const json = pm.response.json();",
+              "if (json.data && json.data.customerId) pm.collectionVariables.set('customerId', json.data.customerId);"
+            ]}
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/customer/add",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Test Customer\",\n  \"customerEmail\": \"testcustomer@example.com\",\n  \"password\": \"test123\",\n  \"phoneNumber\": \"{{customerPhone}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [{
+            "listen": "test",
+            "script": { "type": "text/javascript", "exec": [
+              "const json = pm.response.json();",
+              "if (json.data && json.data.token) pm.collectionVariables.set('customerToken', json.data.token);",
+              "if (json.data && json.data.customerId) pm.collectionVariables.set('customerId', json.data.customerId);"
+            ]}
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/customer/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"testcustomer@example.com\",\n  \"password\": \"test123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Send OTP",
+          "event": [{
+            "listen": "test",
+            "script": { "type": "text/javascript", "exec": [
+              "const json = pm.response.json();",
+              "if (json.data) pm.collectionVariables.set('customerOtpCode', json.data);"
+            ]}
+          }],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/customer/otp/send?phoneNumber={{customerPhone}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customer", "otp", "send"],
+              "query": [{ "key": "phoneNumber", "value": "{{customerPhone}}" }]
+            }
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/customer/phone/verify?phoneNumber={{customerPhone}}&otpCode={{customerOtpCode}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "customer", "phone", "verify"],
+              "query": [
+                { "key": "phoneNumber", "value": "{{customerPhone}}" },
+                { "key": "otpCode", "value": "{{customerOtpCode}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Self (Me)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/api/customer/me",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Updated Customer Name\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Self (Me)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": "{{baseUrl}}/api/customer/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - Customer Management",
+      "item": [
+        {
+          "name": "List All Customers",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin/customer"
+          }
+        },
+        {
+          "name": "Get Customer By Id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin/customer/{{customerId}}"
+          }
+        },
+        {
+          "name": "Update Customer By Id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/api/admin/customer/{{customerId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Admin Updated This Customer\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Customer By Id",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin/customer/{{customerId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Cases",
+      "item": [
+        {
+          "name": "No Token (expect 401)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/admin/driver"
+          }
+        },
+        {
+          "name": "Garbage Token (expect 401)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer garbage.invalid.token" }],
+            "url": "{{baseUrl}}/api/admin/driver"
+          }
+        },
+        {
+          "name": "Driver Token On Admin Endpoint (expect 403)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }],
+            "url": "{{baseUrl}}/api/admin/driver"
+          }
+        }
+      ]
+    }
+  ]
+}

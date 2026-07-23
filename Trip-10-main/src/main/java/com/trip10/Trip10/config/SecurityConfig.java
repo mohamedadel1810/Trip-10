@@ -1,5 +1,7 @@
 package com.trip10.Trip10.config;
 
+import com.trip10.Trip10.exception.RestAccessDeniedHandler;
+import com.trip10.Trip10.exception.RestAuthenticationEntryPoint;
 import com.trip10.Trip10.jwt.JwtAuthenticationFilter;
 import com.trip10.Trip10.logging.ApiLoggingFilter;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,8 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final ApiLoggingFilter apiLoggingFilter;
     private final AdminDetailsService adminDetailsService;
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    private final RestAccessDeniedHandler restAccessDeniedHandler;
 
 
 
@@ -72,10 +76,18 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(restAuthenticationEntryPoint)
+                        .accessDeniedHandler(restAccessDeniedHandler)
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/admin/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/driver").permitAll()
                         .requestMatchers("/api/driver/login", "/api/driver/otp/send", "/api/driver/phone/verify").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/customer/add").permitAll()
+                        .requestMatchers("/api/customer/login", "/api/customer/otp/send", "/api/customer/phone/verify").permitAll()
+                        .requestMatchers("/api/admin/driver/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/admin/customer/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter,

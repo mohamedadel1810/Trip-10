@@ -7,9 +7,8 @@ import com.trip10.Trip10.dto.DriverResponse;
 import com.trip10.Trip10.dto.UpdateUserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/driver")
@@ -20,12 +19,6 @@ public class DriverController {
     public DriverController(DriverService driverService) {
         this.driverService = driverService;
     }
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<DriverResponse>>> getDrivers() {return ApiResponse.success("drivers fetched successfully",driverService.findAll()).toResponseEntity();}
-
-@GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<DriverResponse>> getDriver(@PathVariable int id) {return driverService.findById(id).toResponseEntity();}
-
     @PostMapping
     public ResponseEntity<ApiResponse<DriverResponse>> addDriver(@RequestBody DriverRequest request){
         return driverService.create(request).toResponseEntity();
@@ -35,13 +28,13 @@ public class DriverController {
     public ResponseEntity<ApiResponse<DriverResponse>> login(@RequestBody DriverRequest request){
         return driverService.login(request).toResponseEntity();
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<DriverResponse>> updateDriver(@PathVariable int id, @RequestBody UpdateUserRequest request){
-        return driverService.update(id,request).toResponseEntity();
+    @PutMapping("/me")
+    public ResponseEntity<ApiResponse<DriverResponse>> updateSelf(Authentication authentication, @RequestBody UpdateUserRequest request){
+        return driverService.updateSelf(authentication.getName(), request).toResponseEntity();
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteDriver(@PathVariable int id){
-        return driverService.deleteById(id).toResponseEntity();
+    @DeleteMapping("/me")
+    public ResponseEntity<ApiResponse<Void>> deleteSelf(Authentication authentication){
+        return driverService.deleteSelf(authentication.getName()).toResponseEntity();
     }
 
 @PostMapping("/otp/send")

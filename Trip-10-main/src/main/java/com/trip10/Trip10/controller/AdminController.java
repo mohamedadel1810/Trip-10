@@ -65,7 +65,7 @@ public class AdminController {
                 )
         );
 
-        String token = jwtService.generateToken(request.getEmail());
+        String token = jwtService.generateToken(request.getEmail(), "ADMIN");
 
         return ApiResponse.success(
                 "Login successful",

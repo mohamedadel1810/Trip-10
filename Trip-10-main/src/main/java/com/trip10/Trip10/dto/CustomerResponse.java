@@ -13,6 +13,9 @@ public class CustomerResponse {
     private String customerName;
     private String customerEmail;
     private String phoneNumber;
+    private boolean otpVerified;
+    private String message;
+    private String token;
 
     public CustomerResponse(int customerId, String customerName, String customerEmail, String phoneNumber) {
         this.customerId = customerId;

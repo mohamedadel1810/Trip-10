@@ -21,8 +21,8 @@ VALUES
 
 INSERT IGNORE INTO customer (id, user_name, email, password, phone_number, otp_verified, created_at)
 VALUES
-    (1, 'Sara Ali', 'sara.ali@example.com', '$2b$10$qu6lK5l3ALED9vUOqHW0UubEWUUT9uVlz.RfDEiHhG7OPALxxaZIm', '01011111111', FALSE, NOW()),
-    (2, 'Mona Youssef', 'mona.youssef@example.com', '$2b$10$qu6lK5l3ALED9vUOqHW0UubEWUUT9uVlz.RfDEiHhG7OPALxxaZIm', '01022222222', TRUE, NOW());
+    (1, 'Sara Ali', 'sara.ali@example.com', '$2b$10$qu6lK5l3ALED9vUOqHW0UubEWUUT9uVlz.RfDEiHhG7OPALxxaZIm', '+201011111111', FALSE, NOW()),
+    (2, 'Mona Youssef', 'mona.youssef@example.com', '$2b$10$qu6lK5l3ALED9vUOqHW0UubEWUUT9uVlz.RfDEiHhG7OPALxxaZIm', '+201022222222', TRUE, NOW());
 
 INSERT IGNORE INTO document (id, file_name, path, uploaded_at, auth_status, document_type, owner_type)
 VALUES
@@ -31,8 +31,8 @@ VALUES
 
 INSERT IGNORE INTO driver (id, driver_name, email, password, phone_number, auth_status, otp_verification, created_at, driver_type)
 VALUES
-    (1, 'Ahmed Mostafa', 'ahmed.driver@example.com', '$2b$10$qu6lK5l3ALED9vUOqHW0UubEWUUT9uVlz.RfDEiHhG7OPALxxaZIm', '01012345678', 'PENDING', FALSE, NOW(), 'INDIVIDUAL_DRIVER'),
-    (2, 'Karim Hassan', 'karim.driver@example.com', '$2b$10$qu6lK5l3ALED9vUOqHW0UubEWUUT9uVlz.RfDEiHhG7OPALxxaZIm', '01098765432', 'VERIFIED', TRUE, NOW(), 'COMPANY_DRIVER');
+    (1, 'Ahmed Mostafa', 'ahmed.driver@example.com', '$2b$10$qu6lK5l3ALED9vUOqHW0UubEWUUT9uVlz.RfDEiHhG7OPALxxaZIm', '+201012345678', 'PENDING', FALSE, NOW(), 'INDIVIDUAL_DRIVER'),
+    (2, 'Karim Hassan', 'karim.driver@example.com', '$2b$10$qu6lK5l3ALED9vUOqHW0UubEWUUT9uVlz.RfDEiHhG7OPALxxaZIm', '+201098765432', 'VERIFIED', TRUE, NOW(), 'COMPANY_DRIVER');
 
 INSERT IGNORE INTO car (id, doc_id, brand, model, color, plate_number, created_at, verification_status)
 VALUES
@@ -45,7 +45,3 @@ VALUES
 INSERT IGNORE INTO driver_doc (id, driver_id, document_id, file_name, uploaded_at, path, auth_status)
 VALUES
     (1, 1, 1, 'national_id_front.jpg', NOW(), '/uploads/docs/national_id_front.jpg', 'PENDING');
-
-INSERT IGNORE INTO otp_verification (id, phone_number, otp_code, expires_at, is_verified)
-VALUES
-    (1, '01012345678', '123456', DATE_ADD(NOW(), INTERVAL 5 MINUTE), FALSE);

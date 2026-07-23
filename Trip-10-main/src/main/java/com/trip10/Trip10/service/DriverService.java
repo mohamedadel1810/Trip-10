@@ -24,7 +24,9 @@ ApiResponse<DriverResponse>verifyOtp(String phoneNumber, String otp);
 ApiResponse<DriverResponse> login(DriverRequest request);
 
 ApiResponse<DriverResponse> update(int id, UpdateUserRequest request);
-ApiResponse<Void> deleteById(int id);  }
+ApiResponse<DriverResponse> updateSelf(String email, UpdateUserRequest request);
+ApiResponse<Void> deleteById(int id);
+ApiResponse<Void> deleteSelf(String email);  }
 
 //
 //ApiResponse<DriverResponse> updateDoc(int id, DriverRequest request);

@@ -118,15 +118,6 @@ CREATE TABLE IF NOT EXISTS driver_doc (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS otp_verification (
-    id INT NOT NULL AUTO_INCREMENT,
-    phone_number VARCHAR(255),
-    otp_code VARCHAR(255),
-    expires_at DATETIME,
-    is_verified BOOLEAN DEFAULT FALSE,
-    PRIMARY KEY (id)
-);
-
 CREATE TABLE IF NOT EXISTS trip (
     id INT NOT NULL AUTO_INCREMENT,
     driver_id INT,

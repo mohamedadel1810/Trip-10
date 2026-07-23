@@ -37,6 +37,10 @@ public static <T> ApiResponse<T> success(String message,T data) {return new ApiR
         return new ApiResponse<>(false, message, null, 400);
     }
 
+    public static <T> ApiResponse<T> unauthorized(String message) {
+        return new ApiResponse<>(false, message, null, 401);
+    }
+
     public static <T> ApiResponse<T> badRequest(String message, T data) {
         return new ApiResponse<>(false, message, data, 400);
     }
