@@ -71,6 +71,7 @@ public class DriverServiceImpl implements DriverService {
                 .orElse(ApiResponse.notFound("Driver not found: " + id));
     }
 
+
     @Override
     @Transactional
     public ApiResponse<DriverResponse> create(DriverRequest request) {
@@ -92,7 +93,7 @@ public class DriverServiceImpl implements DriverService {
         Driver saved = driverRepo.save(driver);
         DriverResponse response = toResponse(saved);
         response.setMessage("Registered, not verified yet");
-        response.setToken(jwtService.generateToken(saved.getEmail(), "DRIVER"));
+        response.setToken(jwtService.generateToken(String.valueOf(saved.getId()), "DRIVER"));
         return ApiResponse.created("Driver registered successfully", response);
     }
 
@@ -177,7 +178,7 @@ public class DriverServiceImpl implements DriverService {
 
                     DriverResponse response = toResponse(driver);
                     response.setMessage(message);
-                    response.setToken(jwtService.generateToken(driver.getEmail(), "DRIVER"));
+                    response.setToken(jwtService.generateToken(String.valueOf(driver.getId()), "DRIVER"));
                     return ApiResponse.success(message, response);
                 })
                 .orElse(ApiResponse.notFound("there is no account found with this phone number"));
@@ -196,8 +197,8 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public ApiResponse<DriverResponse> updateSelf(String email, UpdateUserRequest request) {
-        Driver driver = driverRepo.findDriverByEmail(email).orElse(null);
+    public ApiResponse<DriverResponse> updateSelf(int id, UpdateUserRequest request) {
+        Driver driver = driverRepo.findById(id).orElse(null);
         if (driver == null) return ApiResponse.notFound("driver not found");
 
         if (!driver.isOtpVerification())
@@ -260,8 +261,8 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     @Transactional
-    public ApiResponse<Void> deleteSelf(String email) {
-        return driverRepo.findDriverByEmail(email)
+    public ApiResponse<Void> deleteSelf(int id) {
+        return driverRepo.findById(id)
                 .map(driver -> {
                     if (!driver.isOtpVerification())
                         return ApiResponse.<Void>forbidden("Verify your phone number via OTP before making changes to your account");

@@ -51,16 +51,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
 
 
-        String email = jwtService.extractUsername(token);
+        String subject = jwtService.extractUsername(token);
         String role = jwtService.extractRole(token);
 
 
-        if (email != null && role != null &&
+        if (subject != null && role != null &&
                 SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails = resolveUserDetails(email, role);
+            UserDetails userDetails = resolveUserDetails(subject, role);
 
-            if (userDetails != null && jwtService.isTokenValid(token, email)) {
+            if (userDetails != null && jwtService.isTokenValid(token, subject)) {
 
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
@@ -87,28 +87,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * driver/customer token is verified against a live row in its own table
      * (not the admin table) — revoked/deleted accounts stop working immediately
      * instead of staying valid until token expiry.
+     *
+     * ADMIN tokens carry the admin's email as subject (AdminDetailsService
+     * follows Spring Security's username-based UserDetailsService contract,
+     * needed for the password-check step at login time). DRIVER/CUSTOMER
+     * tokens carry the numeric id instead — looking them up by id rather than
+     * email means changing your own email via self-update can't invalidate
+     * your existing token.
      */
-    private UserDetails resolveUserDetails(String email, String role) {
+    private UserDetails resolveUserDetails(String subject, String role) {
         try {
             return switch (role) {
-                case "ADMIN" -> adminDetailsService.loadUserByUsername(email);
-                case "DRIVER" -> driverRepo.findDriverByEmail(email)
+                case "ADMIN" -> adminDetailsService.loadUserByUsername(subject);
+                case "DRIVER" -> driverRepo.findById(Integer.parseInt(subject))
                         .map(driver -> (UserDetails) User.builder()
-                                .username(driver.getEmail())
+                                .username(String.valueOf(driver.getId()))
                                 .password(driver.getPassword())
                                 .authorities(List.of(new SimpleGrantedAuthority("ROLE_DRIVER")))
                                 .build())
                         .orElse(null);
-                case "CUSTOMER" -> customerRepo.findCustomerByEmail(email)
+                case "CUSTOMER" -> customerRepo.findById(Integer.parseInt(subject))
                         .map(customer -> (UserDetails) User.builder()
-                                .username(customer.getEmail())
+                                .username(String.valueOf(customer.getId()))
                                 .password(customer.getPassword())
                                 .authorities(List.of(new SimpleGrantedAuthority("ROLE_CUSTOMER")))
                                 .build())
                         .orElse(null);
                 default -> null;
             };
-        } catch (UsernameNotFoundException e) {
+        } catch (UsernameNotFoundException | NumberFormatException e) {
             return null;
         }
     }

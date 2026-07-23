@@ -26,13 +26,17 @@ public class CustomerController {
     public ResponseEntity<ApiResponse<CustomerResponse>> addCustomer(@RequestBody CustomerRequest customerRequest) {
         return customerService.create(customerRequest).toResponseEntity();
     }
-    @PutMapping("/me")
-    public ResponseEntity<ApiResponse<CustomerResponse>> updateSelf(Authentication authentication, @RequestBody UpdateUserRequest request) {
-        return customerService.updateSelf(authentication.getName(), request).toResponseEntity();
+    @GetMapping
+    public ResponseEntity<ApiResponse<CustomerResponse>> getSelf(Authentication authentication) {
+        return customerService.findById(Integer.parseInt(authentication.getName())).toResponseEntity();
     }
-    @DeleteMapping("/me")
+    @PutMapping
+    public ResponseEntity<ApiResponse<CustomerResponse>> updateSelf(Authentication authentication, @RequestBody UpdateUserRequest request) {
+        return customerService.updateSelf(Integer.parseInt(authentication.getName()), request).toResponseEntity();
+    }
+    @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> deleteSelf(Authentication authentication) {
-        return customerService.deleteSelf(authentication.getName()).toResponseEntity();
+        return customerService.deleteSelf(Integer.parseInt(authentication.getName())).toResponseEntity();
     }
 
     @PostMapping("/otp/send")

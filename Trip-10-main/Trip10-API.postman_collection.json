@@ -181,14 +181,22 @@
           }
         },
         {
-          "name": "Update Self (Me)",
+          "name": "Get Self",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }],
+            "url": "{{baseUrl}}/api/driver"
+          }
+        },
+        {
+          "name": "Update Self",
           "request": {
             "method": "PUT",
             "header": [
               { "key": "Authorization", "value": "Bearer {{driverToken}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": "{{baseUrl}}/api/driver/me",
+            "url": "{{baseUrl}}/api/driver",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"Updated Driver Name\"\n}"
@@ -196,11 +204,11 @@
           }
         },
         {
-          "name": "Delete Self (Me)",
+          "name": "Delete Self",
           "request": {
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }],
-            "url": "{{baseUrl}}/api/driver/me"
+            "url": "{{baseUrl}}/api/driver"
           }
         },
         {
@@ -334,14 +342,22 @@
           }
         },
         {
-          "name": "Update Self (Me)",
+          "name": "Get Self",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": "{{baseUrl}}/api/customer"
+          }
+        },
+        {
+          "name": "Update Self",
           "request": {
             "method": "PUT",
             "header": [
               { "key": "Authorization", "value": "Bearer {{customerToken}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": "{{baseUrl}}/api/customer/me",
+            "url": "{{baseUrl}}/api/customer",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"Updated Customer Name\"\n}"
@@ -349,11 +365,11 @@
           }
         },
         {
-          "name": "Delete Self (Me)",
+          "name": "Delete Self",
           "request": {
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
-            "url": "{{baseUrl}}/api/customer/me"
+            "url": "{{baseUrl}}/api/customer"
           }
         }
       ]

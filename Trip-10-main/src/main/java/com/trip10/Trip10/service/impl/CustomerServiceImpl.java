@@ -83,8 +83,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public ApiResponse<CustomerResponse> updateSelf(String email, UpdateUserRequest request) {
-        Customer customer = customerRepo.findCustomerByEmail(email).orElse(null);
+    public ApiResponse<CustomerResponse> updateSelf(int id, UpdateUserRequest request) {
+        Customer customer = customerRepo.findById(id).orElse(null);
         if (customer == null)
             return ApiResponse.notFound("Customer not found");
 
@@ -137,7 +137,7 @@ public class CustomerServiceImpl implements CustomerService {
                             ? "Login successful"
                             : "Login successful, but your phone number is not verified yet. Verify it via OTP to unlock full access.";
                     response.setMessage(message);
-                    response.setToken(jwtService.generateToken(customer.getEmail(), "CUSTOMER"));
+                    response.setToken(jwtService.generateToken(String.valueOf(customer.getId()), "CUSTOMER"));
 
                     return ApiResponse.success(message, response);
                 })
@@ -158,8 +158,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public ApiResponse<Void> deleteSelf(String email) {
-        return customerRepo.findCustomerByEmail(email)
+    public ApiResponse<Void> deleteSelf(int id) {
+        return customerRepo.findById(id)
                 .map(user -> {
                     if (!user.isOtpVerified())
                         return ApiResponse.<Void>forbidden("Verify your phone number via OTP before making changes to your account");

@@ -28,13 +28,17 @@ public class DriverController {
     public ResponseEntity<ApiResponse<DriverResponse>> login(@RequestBody DriverRequest request){
         return driverService.login(request).toResponseEntity();
     }
-    @PutMapping("/me")
-    public ResponseEntity<ApiResponse<DriverResponse>> updateSelf(Authentication authentication, @RequestBody UpdateUserRequest request){
-        return driverService.updateSelf(authentication.getName(), request).toResponseEntity();
+    @GetMapping
+    public ResponseEntity<ApiResponse<DriverResponse>> getSelf(Authentication authentication){
+        return driverService.findById(Integer.parseInt(authentication.getName())).toResponseEntity();
     }
-    @DeleteMapping("/me")
+    @PutMapping
+    public ResponseEntity<ApiResponse<DriverResponse>> updateSelf(Authentication authentication, @RequestBody UpdateUserRequest request){
+        return driverService.updateSelf(Integer.parseInt(authentication.getName()), request).toResponseEntity();
+    }
+    @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> deleteSelf(Authentication authentication){
-        return driverService.deleteSelf(authentication.getName()).toResponseEntity();
+        return driverService.deleteSelf(Integer.parseInt(authentication.getName())).toResponseEntity();
     }
 
 @PostMapping("/otp/send")
