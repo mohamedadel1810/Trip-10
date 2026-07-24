@@ -303,7 +303,7 @@
             "url": "{{baseUrl}}/api/customer/login",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"testcustomer@example.com\",\n  \"password\": \"test123\"\n}"
+              "raw": "{\n  \"phoneNumber\": \"{{customerPhone}}\",\n  \"password\": \"test123\"\n}"
             }
           }
         },

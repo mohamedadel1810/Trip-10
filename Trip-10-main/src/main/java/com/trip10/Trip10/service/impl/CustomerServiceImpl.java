@@ -126,10 +126,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public ApiResponse<CustomerResponse> login(CustomerLoginRequest request) {
-        return customerRepo.findCustomerByEmail(request.getEmail())
+        return customerRepo.findCustomerByPhoneNumber(PhoneUtil.normalize(request.getPhoneNumber()))
                 .map(customer -> {
                     if (!passwordEncoder.matches(request.getPassword(), customer.getPassword())) {
-                        return ApiResponse.<CustomerResponse>badRequest("Invalid email or password");
+                        return ApiResponse.<CustomerResponse>badRequest("Invalid phone number or password");
                     }
 
                     CustomerResponse response = toCustomerResponse(customer);
@@ -141,7 +141,7 @@ public class CustomerServiceImpl implements CustomerService {
 
                     return ApiResponse.success(message, response);
                 })
-                .orElse(ApiResponse.notFound("No account found with this email"));
+                .orElse(ApiResponse.notFound("No account found with this phone number"));
     }
 
     @Override
